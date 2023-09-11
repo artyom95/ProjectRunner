@@ -37,7 +37,7 @@ ModelImporter:
       takeName: mixamo.com
       internalID: -203655887218126122
       firstFrame: 0
-      lastFrame: 401
+      lastFrame: 237
       wrapMode: 0
       orientationOffsetY: 0
       level: 0
@@ -56,7 +56,21 @@ ModelImporter:
       mirror: 0
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
-      events: []
+      events:
+      - time: 0.64315486
+        functionName: StopDancing
+        data: 
+        objectReferenceParameter: {fileID: 2561293238708270295, guid: c7858e7efd33b524e856e8e174b78c76, type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
+      - time: 0
+        functionName: StopDancing
+        data: 
+        objectReferenceParameter: {fileID: 2561293238708270295, guid: c7858e7efd33b524e856e8e174b78c76, type: 3}
+        floatParameter: 0
+        intParameter: 0
+        messageOptions: 0
       transformMask: []
       maskType: 3
       maskSource: {instanceID: 0}

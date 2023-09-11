@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MapTypeProvider : MonoBehaviour
@@ -9,7 +6,6 @@ public class MapTypeProvider : MonoBehaviour
     private int[,] _secondArrayMap;
     private int[,] _thirdArrayMap;
     private int[,] _currentMap;
-
     private int _numberScene;
 
     private void Awake()
@@ -23,8 +19,8 @@ public class MapTypeProvider : MonoBehaviour
     {
         _firstArrayMap = new int[10, 8]
         {
-            { -1, -1, -1, 0, 7, 5, -1, 1 },
-            { 9, -1, 5, 6, 7, 3, 0, 0 },
+            { -1, 0, 0, 0, 7, 5, -1, 1 },
+            { 9, -1, -1, 6, 7, 3, 0, 0 },
             { 0, 0, 0, 0, 0, 0, 0, 0 },
             { 0, 4, 0, 6, 8, 2, 0, 0 },
             { 0, 0, 0, 0, 0, 0, 0, 0 },

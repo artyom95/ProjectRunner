@@ -11,7 +11,7 @@ public class MapBuilder : MonoBehaviour
     [SerializeField] private TileSettings _prefabTileWithPlaceForHeroLocation;
     [SerializeField] private GameObject _prefabTileWithoutPlaceForLocation;
     [SerializeField] private PositionCalculator _positionCalculator;
-    [SerializeField] private GameObject _prefabDoor;
+    [SerializeField] private DoorBehaviour _prefabDoor;
 
     private Action _getTileSettingsArray;
     private Action _getPlayerPosition;
@@ -21,11 +21,13 @@ public class MapBuilder : MonoBehaviour
     
     private TileSettings[,] _tileSettingsArray;
     
-    private bool _isItEmptyPlace = false;
-    private bool _wasTheDoorInstaled = false;
-    private bool _isPointForInstanceDoorDetected = false;
+    private bool _isItEmptyPlace ;
+    private bool _wasTheDoorInstalled ;
+    private bool _isPointForInstanceDoorDetected ;
 
     private Vector3 _playerPosition;
+
+    private DoorBehaviour _door;
     // Start is called before the first frame update
     private void Start()
     {
@@ -41,14 +43,18 @@ public class MapBuilder : MonoBehaviour
         BuildingMap();
     }
 
+    public DoorBehaviour GetDoor()
+    {
+        return _door;
+    }
     private void BuildingMap()
     {
-        var locationTileOnHeigh = 0;
+        var locationTileOnHeight = 0;
         for (var row = 0; row < _map.GetLength(0); row++)
         {//
             if (row % 2 == 0)
             {
-                locationTileOnHeigh = Random.Range(1, 3); 
+                locationTileOnHeight = Random.Range(1, 3); 
             }
 
 
@@ -60,10 +66,10 @@ public class MapBuilder : MonoBehaviour
                 {
                     var tile = Instantiate(_prefabTileWithoutPlaceForLocation);
                     tile.transform.position =
-                        _positionCalculator.ConvertToWorldPosition(row, locationTileOnHeigh, column);
+                        _positionCalculator.ConvertToWorldPosition(row, locationTileOnHeight, column);
                     _playerPosition = _positionCalculator.CalculatePlayerPositionForInstance(tile);
                    
-                    if (_isPointForInstanceDoorDetected && !_wasTheDoorInstaled)
+                    if (_isPointForInstanceDoorDetected && !_wasTheDoorInstalled)
                     {
                       InstanceDoor(tile);
                     }
@@ -74,7 +80,7 @@ public class MapBuilder : MonoBehaviour
                     var tile = Instantiate(typeObjectForInstantiate);
 
                     tile.transform.position =
-                        _positionCalculator.ConvertToWorldPosition(row, locationTileOnHeigh, column);
+                        _positionCalculator.ConvertToWorldPosition(row, locationTileOnHeight, column);
                     tile.SetColor(_arrayValue);
                     _tileSettingsArray[row, column] = tile;
                 }
@@ -88,11 +94,10 @@ public class MapBuilder : MonoBehaviour
 
     private void InstanceDoor(GameObject tile)
     {
-        var door = Instantiate(_prefabDoor);
-       door.transform.position = _positionCalculator.CalculateDoorPositionForInstance(tile.transform.position);
-        _wasTheDoorInstaled = true;
-        door.transform.Rotate(0, -90, 0);
-
+        _door = Instantiate(_prefabDoor);
+       _door.transform.position = _positionCalculator.CalculateDoorPositionForInstance(tile.transform.position);
+        _wasTheDoorInstalled = true;
+        _door.transform.Rotate(0, -90, 0);
     }
     private TileSettings FindTypeObject(int row, int column)
     {

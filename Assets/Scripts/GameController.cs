@@ -11,29 +11,26 @@ public class GameController : MonoBehaviour
     [SerializeField] private PlayerController _playerController;
     [SerializeField] private MousePositionController _mousePositionController;
     [SerializeField] private CameraBehaviour _cameraBehaviour;
-    [SerializeField] private AnimatorController _animatorController;
+
     [SerializeField] private Color _finishColor;
     [SerializeField] private WinController _winController;
     private Color[] _arrayColors;
     private TileSettings[,] _tileSettingsArray;
     private Vector3 _playerPosition;
-    private GameObject _player;
-
-    // Start is called before the first frame update
-
+    private Player _player;
+   
     void Start()
     {
         _mapBuilder.Initialize(GetTileSettingsArray, GetPlayerPosition);
         _mousePositionController.Initialize(GetDestinationPositionForPlayerMove);
         _nextPositionProvider.Initialize(_tileSettingsArray);
-        _animatorController.Initialize(_player);
     }
 
     private void GetDestinationPositionForPlayerMove()
     {
         var destinationPosition = _mousePositionController.GetTheDestinationPositionForPlayerMove();
-        Vector3 lastPosition = Vector3.zero;
-        Vector2Int position = _positionCalculator.ConvertToCellPosition(destinationPosition);
+        var lastPosition = Vector3.zero;
+        var position = _positionCalculator.ConvertToCellPosition(destinationPosition);
         if (_nextPositionProvider.IsItColorTile(position))
         {
             lastPosition = _nextPositionProvider.GetNextPositionInArray();
@@ -42,9 +39,8 @@ public class GameController : MonoBehaviour
         _playerController.MoveToTheDestinationPlace(destinationPosition, lastPosition);
         if (_mapBuilder.IsItFinishColor(_finishColor, position))
         {
-            _winController.CelebrateWin();
+            _winController.CelebrateWin(_player, door:_mapBuilder.GetDoor());
         }
-       //_animatorController.StopDancing();
     }
 
     private void GetTileSettingsArray()
@@ -55,12 +51,12 @@ public class GameController : MonoBehaviour
     private void GetPlayerPosition()
     {
         _playerPosition = _mapBuilder.GetPlayerPosition();
-        PlaceAPlayer();
+        PlacePlayer();
     }
 
-    private void PlaceAPlayer()
+    private void PlacePlayer()
     {
-        _playerController.PlaceAPlayerOnScene(_playerPosition);
+        _playerController.PlacePlayerOnScene(_playerPosition);
         GetPlayerFromPlayerController();
     }
 
@@ -68,10 +64,5 @@ public class GameController : MonoBehaviour
     {
         _player = _playerController.GetPlayer();
         _cameraBehaviour.Initialise(_player);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
     }
 }
