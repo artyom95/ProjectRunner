@@ -17,16 +17,25 @@ public class GameController : MonoBehaviour
     private Color[] _arrayColors;
     private TileSettings[,] _tileSettingsArray;
     private Vector3 _playerPosition;
+    private Vector3 _positionFinishTile;
+    private Vector3 _finishPlayerPosition;
     private Player _player;
-   
+    private bool _isPlayerOnFinishPosition;
+
     void Start()
     {
         _mapBuilder.Initialize(GetTileSettingsArray, GetPlayerPosition);
-        _mousePositionController.Initialize(GetDestinationPositionForPlayerMove);
-        _nextPositionProvider.Initialize(_tileSettingsArray);
+        _mousePositionController.Initialize(FindDestinationPositionForPlayerMove);
+        _nextPositionProvider.Initialize(_tileSettingsArray, _finishColor, FindFinishPlayerPosition);
     }
 
-    private void GetDestinationPositionForPlayerMove()
+    private void FindFinishPlayerPosition(Vector3 finishPlayerPosition)
+    {
+        _positionFinishTile = finishPlayerPosition;
+        _finishPlayerPosition = _positionCalculator.CalculateFinishPlayerPosition(_positionFinishTile);
+    }
+
+    private void FindDestinationPositionForPlayerMove()
     {
         var destinationPosition = _mousePositionController.GetTheDestinationPositionForPlayerMove();
         var lastPosition = Vector3.zero;
@@ -36,10 +45,15 @@ public class GameController : MonoBehaviour
             lastPosition = _nextPositionProvider.GetNextPositionInArray();
         }
 
-        _playerController.MoveToTheDestinationPlace(destinationPosition, lastPosition);
-        if (_mapBuilder.IsItFinishColor(_finishColor, position))
+        _playerController.MoveToDestinationPlace(destinationPosition, lastPosition, _finishPlayerPosition,
+            IsPlayerOnFinish);
+    }
+
+    private void IsPlayerOnFinish(bool isPlayerOnFinish)
+    {
+        if (isPlayerOnFinish) 
         {
-            _winController.CelebrateWin(_player, door:_mapBuilder.GetDoor());
+            _winController.CelebrateWin(_player, door: _mapBuilder.GetDoor());
         }
     }
 

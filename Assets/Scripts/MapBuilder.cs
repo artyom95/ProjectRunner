@@ -132,7 +132,7 @@ public class MapBuilder : MonoBehaviour
 
     public bool IsItFinishColor(Color color, Vector2Int position)
     {
-        if (_tileSettingsArray[position.x,position.y] != null && _tileSettingsArray[position.x,position.y].color == color )
+        if (_tileSettingsArray[position.x,position.y] != null && _tileSettingsArray[position.x,position.y].Color == color )
         {
             return true;
         }

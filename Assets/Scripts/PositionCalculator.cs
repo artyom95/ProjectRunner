@@ -8,6 +8,7 @@ public class PositionCalculator : MonoBehaviour
     private const float _doorInstanceOffset = 0.3f;
     private const float _playerMoveUpOffset = 1.15f;
     private const float _playerMoveDownOffset = 1.0f;
+    private const float _offsetNextDownPositionY = 0.7f;
    public Vector3 ConvertToWorldPosition(int x, int y, int z)
     {
         var position = _grid.CellToWorld(new Vector3Int(x, y, z));
@@ -56,5 +57,18 @@ public class PositionCalculator : MonoBehaviour
         var newDestinationPoint = new Vector3(destinationPosition.x, playerPosition.y, destinationPosition.z);
 
         return newDestinationPoint;
+    }
+
+    public Vector3 CalculateNextDownPosition(Vector3 nextPosition)
+    {
+        var nextDownPosition = new Vector3(nextPosition.x, nextPosition.y - _offsetNextDownPositionY, nextPosition.z);
+        return nextDownPosition;
+    }
+
+    public Vector3 CalculateFinishPlayerPosition(Vector3 positionFinishTile)
+    {
+        var nextDownPosition = CalculateNextDownPosition(positionFinishTile);
+        var nextUpPlayerPosition = CalculateNextUpPositionForPlayerMoveUp(nextDownPosition);
+        return nextUpPlayerPosition;
     }
 }

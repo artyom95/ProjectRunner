@@ -8,7 +8,7 @@ public class TileSettings : MonoBehaviour
 {
     [SerializeField] private GameObject _partForColoring ;
     [SerializeField] private Color[] _arrayColor = new Color[10] ;
-    public Color color => _renderer.material.color;
+    public Color Color => _renderer.material.color;
     private MeshRenderer _renderer; // Start is called before the first frame update
 
     private void Awake()

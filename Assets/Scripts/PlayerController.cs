@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public Action ChangePlayerState;
+    public Action PlayerIsPosition;
     [SerializeField] private PositionCalculator _positionCalculator;
     [SerializeField] private Player _playerPrefab;
     [SerializeField] private float _movingPlayerDuration;
@@ -16,9 +16,9 @@ public class PlayerController : MonoBehaviour
     private Player _player;
     private GameObject _basePlayer;
     private Vector3 _nextDownPosition;
-
+    private Vector3 _finishPlayerPosition;
+    
     private const int _yPlayerAngle = -90;
-    private const float _offsetNextDownPositionY = 0.7f;
     private const float _deltaBetweenPositions = 1.2f;
 
     public void PlacePlayerOnScene(Vector3 positionForPlacing)
@@ -34,12 +34,12 @@ public class PlayerController : MonoBehaviour
         return _player;
     }
 
-    public void MoveToTheDestinationPlace(Vector3 destinationPosition, Vector3 nextPosition)
+    public void MoveToDestinationPlace(Vector3 destinationPosition, Vector3 nextPosition, Vector3 finishPosition, Action<bool> onPlayerFinishPosition)
     {
         SaveNextPositionForPlayerMoving(nextPosition);
         var sequence = DOTween.Sequence();
         // чтобы игрок не проваливался под тайл ногой(плыл горизонтально)
-        Vector3 destinationPoint =
+        var destinationPoint =
             _positionCalculator.CalculateDestinationPositionForPlayerMove(destinationPosition,
                 _player.transform.position);
 
@@ -60,15 +60,35 @@ public class PlayerController : MonoBehaviour
             else
             {
                 sequence.AppendCallback(_player.StopWalking);
-                sequence.OnComplete(() => ChangePlayerState.Invoke());
+                sequence.AppendCallback(() => PlayerIsPosition?.Invoke());
+                sequence.OnComplete(()=>OnPlayerFinished(finishPosition,onPlayerFinishPosition ));
             }
         }
         else
         {
-            ChangePlayerState?.Invoke();
+            PlayerIsPosition?.Invoke();
         }
+
+       
     }
 
+    private void OnPlayerFinished(Vector3 finishPosition, Action<bool> onPlayerFinishPosition)
+    {
+        if (IsPlayerOnFinishPosition(finishPosition))
+        {
+            onPlayerFinishPosition?.Invoke(IsPlayerOnFinishPosition(finishPosition));
+        }   
+    }
+
+    private bool IsPlayerOnFinishPosition(Vector3 finishPosition)
+    {
+        if (_player.transform.position == finishPosition)
+        {
+            return true;
+        }
+
+        return false;
+    }
     private void InstanceBaseUnderPlayer()
     {
         _basePlayer = Instantiate(_baseUnderPlayer, _player.transform, true);
@@ -79,11 +99,10 @@ public class PlayerController : MonoBehaviour
     {
         if (nextPosition != Vector3.zero)
         {
-            _nextDownPosition = nextPosition;
-            _nextDownPosition.y -= _offsetNextDownPositionY;
+            _nextDownPosition = _positionCalculator.CalculateNextDownPosition(nextPosition);
         }
     }
-
+    
     private bool AreThePositionsNearest(Vector3 destinationPlace)
     {
         if (Math.Abs((_player.transform.position - destinationPlace).magnitude) <= _deltaBetweenPositions &&
@@ -98,7 +117,7 @@ public class PlayerController : MonoBehaviour
     private void MoveDown()
     {
         var sequence = DOTween.Sequence();
-        Vector3 lowerPosition = _positionCalculator.CalculateLowerPositionForPlayerMoveDown(_player.transform.position);
+        var lowerPosition = _positionCalculator.CalculateLowerPositionForPlayerMoveDown(_player.transform.position);
         sequence.Append(_player.transform.DOMove(lowerPosition, _movingPlayerDownOrUpDuration));
         sequence.AppendCallback(HidePlayer);
         sequence.OnComplete(MoveToNextDownPosition);
@@ -115,9 +134,9 @@ public class PlayerController : MonoBehaviour
 
     private void MoveUp()
     {
-        Vector3 nextUpPosition = _positionCalculator.CalculateNextUpPositionForPlayerMoveUp(_nextDownPosition);
+        var nextUpPosition = _positionCalculator.CalculateNextUpPositionForPlayerMoveUp(_nextDownPosition);
         _player.transform.DOMove(nextUpPosition, _movingPlayerDownOrUpDuration)
-            .OnComplete(() => ChangePlayerState.Invoke());
+            .OnComplete(() => PlayerIsPosition.Invoke());
     }
 
     private void HidePlayer()

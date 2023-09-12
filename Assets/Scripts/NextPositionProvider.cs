@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,18 +10,21 @@ public class NextPositionProvider : MonoBehaviour
     private TileSettings[,] _tileSettingsArray;
     private UnityEngine.Color _color;
     private Vector2Int _currentPosition;
+   
 
-    public void Initialize(TileSettings[,] tileSettingsArray)
+    public void Initialize(TileSettings[,] tileSettingsArray,UnityEngine.Color finishColor, Action<Vector3> onFindFinishPlayerPosition)
     {
         _tileSettingsArray = tileSettingsArray;
+        FillFinishPositionInArray(finishColor, onFindFinishPlayerPosition);
     }
-    public bool IsItColorTile( Vector2Int position)
+
+    public bool IsItColorTile(Vector2Int position)
     {
         var tile = _tileSettingsArray[position.x, position.y];
         _currentPosition = position;
         if (tile != null)
         {
-            _color = tile.color;
+            _color = tile.Color;
             return true;
         }
 
@@ -29,29 +33,44 @@ public class NextPositionProvider : MonoBehaviour
 
     public Vector3 GetNextPositionInArray()
     {
-        Vector3 nextPosition = Vector3.zero;
+        var nextPosition = Vector3.zero;
 
-        // List<Vector2Int> allowPositions = new List<Vector2Int>();
         for (var i = 0; i < _tileSettingsArray.GetLength(0); i++)
         {
             for (var i1 = 0; i1 < _tileSettingsArray.GetLength(1); i1++)
             {
-                if (_tileSettingsArray[i, i1] != null && _tileSettingsArray[i, i1].color == _color && !IsTilePositionAreEqual( i,i1) )
-                    
-                    
+                if (_tileSettingsArray[i, i1] != null && _tileSettingsArray[i, i1].Color == _color &&
+                    !IsTilePositionAreEqual(i, i1))
                 {
                     nextPosition = _tileSettingsArray[i, i1].transform.position;
-                    // allowPositions.Add(new Vector2Int(i,i1)); 
+                    return nextPosition;
                 }
             }
         }
 
-        // var number = Random.Range(0, allowPositions.Count);
-        //  Vector2Int nextPosition = allowPositions.First();
-          return nextPosition;
+        return Vector3.zero;
     }
 
-    private bool IsTilePositionAreEqual( int i, int i1)
+    private void FillFinishPositionInArray(UnityEngine.Color finishColor, Action<Vector3> onFindFinishPlayerPosition)
+    {
+        var finishPosition = Vector3.zero;
+
+        for (var i = 0; i < _tileSettingsArray.GetLength(0); i++)
+        {
+            for (var i1 = 0; i1 < _tileSettingsArray.GetLength(1); i1++)
+            {
+                if ( _tileSettingsArray[i, i1] != null && _tileSettingsArray[i, i1].Color == finishColor )
+                {
+                    finishPosition = _tileSettingsArray[i, i1].transform.position;
+                    onFindFinishPlayerPosition?.Invoke(finishPosition);
+                    return;
+                    
+                }
+            }
+        }
+    }
+
+    private bool IsTilePositionAreEqual(int i, int i1)
     {
         if (_currentPosition.x != i || _currentPosition.y != i1)
         {
@@ -59,14 +78,5 @@ public class NextPositionProvider : MonoBehaviour
         }
 
         return true;
-    }
-    // Start is called before the first frame update
-    void Start()
-    {
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
     }
 }

@@ -7,9 +7,9 @@ public class MousePositionController : MonoBehaviour
 {
     [SerializeField] private PlayerController _playerController;
     private Action _getTheDestinationPositionForPlayerMove;
-    private Action _getRaycastColliderColorCordinate;
+    private Action _getRaycastColliderColorCoordinate;
     private Vector3 _positionForPlayerMove ;
-    private bool _isPlayerOnPosition = false;
+    private bool _isMouseLocked ;
     public void Initialize(Action getTheDestinationPositionForPlayerMove)
     {
         _getTheDestinationPositionForPlayerMove = getTheDestinationPositionForPlayerMove;
@@ -18,15 +18,15 @@ public class MousePositionController : MonoBehaviour
     // Start is called before the first frame update
     private  void Start()
     {
-        _playerController.ChangePlayerState += ChangePlayerState;
+        _playerController.PlayerIsPosition += ChangeMouseState;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonUp(0) && !_isPlayerOnPosition)
+        if (Input.GetMouseButtonUp(0) && !_isMouseLocked)
         {
-            _isPlayerOnPosition = true;
+            _isMouseLocked = true;
             var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out var raycastHit))
             {
@@ -37,13 +37,6 @@ public class MousePositionController : MonoBehaviour
                     _positionForPlayerMove = raycastHit.collider.transform.position;
                     _getTheDestinationPositionForPlayerMove?.Invoke();
                 }
-                
-
-               // if (raycastHit.collider.name.Equals("TileVariant"))
-               // {
-               //     _positionForPlayerMove= new Vector3(raycastHit.collider.transform.position.x, (float)(raycastHit.collider.transform.position.y + 0.3), raycastHit.collider.transform.position.z);
-               //     _getTheDestinationPositionForPlayerMove?.Invoke();
-               // }
             }
         }
        
@@ -54,14 +47,14 @@ public class MousePositionController : MonoBehaviour
        return _positionForPlayerMove ;
     }
 
-    private void ChangePlayerState()
+    private void ChangeMouseState()
     {
-        _isPlayerOnPosition = false;
+        _isMouseLocked = false;
     }
 
     private void OnDestroy()
     {
-        _playerController.ChangePlayerState -= ChangePlayerState;
+        _playerController.PlayerIsPosition -= ChangeMouseState;
 
     }
 }
