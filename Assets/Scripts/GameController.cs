@@ -39,10 +39,11 @@ public class GameController : MonoBehaviour
     
     private void StartCurrentLevel()
     {
-       
+        
 
         _mapBuilder.Initialize(_currentLevel, GetTileSettingsArray, GetPlayerPosition);
-        _mousePositionController.Initialize(FindDestinationPositionForPlayerMove);
+        
+        _mousePositionController.Initialize( _player, FindDestinationPositionForPlayerMove);
         _nextPositionProvider.Initialize(_tileSettingsArray, _finishColor, FindFinishPlayerPosition);
     }
 
@@ -95,8 +96,6 @@ public class GameController : MonoBehaviour
     private void GetPlayerFromPlayerController()
     {
         _player = _playerController.GetPlayer();
-        _player.StoppedDance.AddListener( _sceneController.LoadNextScene) ;
-
         _cameraBehaviour.Initialise(_player);
         _playerInitialised?.Invoke(_currentLevel, _player);
     }
