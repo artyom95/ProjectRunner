@@ -1,10 +1,15 @@
 using System;
 using DG.Tweening;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class PlayerController : MonoBehaviour
 {
     public Action PlayerIsPosition;
+
+    [SerializeField] private UnityEvent _appearPlayer;
+    [SerializeField] private UnityEvent _hidePlayer;
+
     [SerializeField] private PositionCalculator _positionCalculator;
     [SerializeField] private Player _playerPrefab;
     [SerializeField] private float _movingPlayerDuration;
@@ -17,7 +22,7 @@ public class PlayerController : MonoBehaviour
     private GameObject _basePlayer;
     private Vector3 _nextDownPosition;
     private Vector3 _finishPlayerPosition;
-    
+
     private const int _yPlayerAngle = -90;
     private const float _deltaBetweenPositions = 1.2f;
 
@@ -34,7 +39,8 @@ public class PlayerController : MonoBehaviour
         return _player;
     }
 
-    public void MoveToDestinationPlace(Vector3 destinationPosition, Vector3 nextPosition, Vector3 finishPosition, Action<bool> onPlayerFinishPosition)
+    public void MoveToDestinationPlace(Vector3 destinationPosition, Vector3 nextPosition, Vector3 finishPosition,
+        Action<bool> onPlayerFinishPosition)
     {
         SaveNextPositionForPlayerMoving(nextPosition);
         var sequence = DOTween.Sequence();
@@ -61,15 +67,13 @@ public class PlayerController : MonoBehaviour
             {
                 sequence.AppendCallback(_player.StopWalking);
                 sequence.AppendCallback(() => PlayerIsPosition?.Invoke());
-                sequence.OnComplete(()=>OnPlayerFinished(finishPosition,onPlayerFinishPosition ));
+                sequence.OnComplete(() => OnPlayerFinished(finishPosition, onPlayerFinishPosition));
             }
         }
         else
         {
             PlayerIsPosition?.Invoke();
         }
-
-       
     }
 
     private void OnPlayerFinished(Vector3 finishPosition, Action<bool> onPlayerFinishPosition)
@@ -77,7 +81,7 @@ public class PlayerController : MonoBehaviour
         if (IsPlayerOnFinishPosition(finishPosition))
         {
             onPlayerFinishPosition?.Invoke(IsPlayerOnFinishPosition(finishPosition));
-        }   
+        }
     }
 
     private bool IsPlayerOnFinishPosition(Vector3 finishPosition)
@@ -89,6 +93,7 @@ public class PlayerController : MonoBehaviour
 
         return false;
     }
+
     private void InstanceBaseUnderPlayer()
     {
         _basePlayer = Instantiate(_baseUnderPlayer, _player.transform, true);
@@ -102,7 +107,7 @@ public class PlayerController : MonoBehaviour
             _nextDownPosition = _positionCalculator.CalculateNextDownPosition(nextPosition);
         }
     }
-    
+
     private bool AreThePositionsNearest(Vector3 destinationPlace)
     {
         if (Math.Abs((_player.transform.position - destinationPlace).magnitude) <= _deltaBetweenPositions &&
@@ -120,6 +125,7 @@ public class PlayerController : MonoBehaviour
         var lowerPosition = _positionCalculator.CalculateLowerPositionForPlayerMoveDown(_player.transform.position);
         sequence.Append(_player.transform.DOMove(lowerPosition, _movingPlayerDownOrUpDuration));
         sequence.AppendCallback(HidePlayer);
+        _hidePlayer?.Invoke();
         sequence.OnComplete(MoveToNextDownPosition);
     }
 
@@ -130,6 +136,7 @@ public class PlayerController : MonoBehaviour
         sequence.Append(_player.transform.DORotate(new Vector3(0, _yPlayerAngle, 0), _rotateDuration));
         sequence.AppendCallback(ShowPlayer);
         sequence.OnComplete(MoveUp);
+       
     }
 
     private void MoveUp()
@@ -137,6 +144,7 @@ public class PlayerController : MonoBehaviour
         var nextUpPosition = _positionCalculator.CalculateNextUpPositionForPlayerMoveUp(_nextDownPosition);
         _player.transform.DOMove(nextUpPosition, _movingPlayerDownOrUpDuration)
             .OnComplete(() => PlayerIsPosition.Invoke());
+        _appearPlayer?.Invoke();
     }
 
     private void HidePlayer()

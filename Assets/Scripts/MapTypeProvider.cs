@@ -10,14 +10,15 @@ public class MapTypeProvider : MonoBehaviour
 
     private void Awake()
     {
-        _numberScene = 1;
+        //     _numberScene = 1;
         CreateMaps();
-        ChoiceMap();
+        //   ChoiceMap();
     }
+
 
     private void CreateMaps()
     {
-        _firstArrayMap = new int[10, 8]
+        _firstArrayMap = new [,]
         {
             { -1, 0, 0, 0, 0, 5, -1, 1 },
             { 9, -1, 2, 6, 7, 0, 0, 0 },
@@ -26,15 +27,38 @@ public class MapTypeProvider : MonoBehaviour
             { 0, 0, 0, 0, 0, 0, 0, 0 },
             { 0, 0, 0, 0, 0, 0, 0, 0 },
             { 0, 0, 0, 4, 0, 0, 0, 0 },
-            { 0, 0,0 , -1, 1, 0, 0, 0 },
+            { 0, 0, 0, -1, 1, 0, 0, 0 },
             { 0, 0, 0, 7, 8, 3, 0, 0 },
             { -1, 3, -1, 0, 0, 0, 0, 0 }
         };
+        _secondArrayMap = new [,]
+        {
+            { -1, -1, 5, 0, 0, 5, -1, 1, 0, 0 },
+            { 9, 1, -1, 6, 7, 0, 0, -1, -1, 1 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, -1, -1 },
+            { 0, 4, 2, 0, 2, 8, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 6, 4, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, -1, 1, 0, 0, 0, 1, 3 },
+            { 0, 0, 0, 7, 8, 3, 0, 0, -1, -1 },
+            { -1, 5, -1, 0, 0, 0, 0, 3, -1, 0 }
+        };
+        _thirdArrayMap = new [,]
+        {
+            { -1, 0, 7, -1, 0, 5, -1, 1 },
+            { 9, 3, 2, 8, 7, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 4, 5,0, 2, 8, 6, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 0, 0, 0, 0, 0 },
+            { 0, 0, 0, 4, -1, -1, 3,-1 },
+            { 0, 6, -1, 5, 1, 0, 0, 0 }
+        };
     }
 
-    private void ChoiceMap()
+    private void ChoiceMap(int currentLevel)
     {
-        switch (_numberScene)
+        switch (currentLevel)
         {
             case 1:
                 _currentMap = _firstArrayMap;
@@ -48,8 +72,9 @@ public class MapTypeProvider : MonoBehaviour
         }
     }
 
-    public int[,] GetTypeOfMap()
+    public int[,] GetTypeMap(int currentLevel)
     {
+        ChoiceMap(currentLevel);
         return _currentMap;
     }
 }

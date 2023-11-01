@@ -8,6 +8,7 @@ public class WinController : MonoBehaviour
     
     [SerializeField]
     private UnityEvent _onCelebrateStart;
+    
     public void CelebrateWin(Player player, DoorBehaviour door)
     {
         door.RotateDoor();

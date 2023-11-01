@@ -10,7 +10,7 @@ public class MousePositionController : MonoBehaviour
     private Action _getRaycastColliderColorCoordinate;
     private Vector3 _positionForPlayerMove ;
     private bool _isMouseLocked ;
-    public void Initialize(Action getTheDestinationPositionForPlayerMove)
+    public void Initialize(Action getTheDestinationPositionForPlayerMove = null)
     {
         _getTheDestinationPositionForPlayerMove = getTheDestinationPositionForPlayerMove;
        
@@ -49,7 +49,7 @@ public class MousePositionController : MonoBehaviour
 
     private void ChangeMouseState()
     {
-        _isMouseLocked = false;
+        _isMouseLocked = !_isMouseLocked;
     }
 
     private void OnDestroy()

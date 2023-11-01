@@ -12,7 +12,7 @@ public class NextPositionProvider : MonoBehaviour
     private Vector2Int _currentPosition;
    
 
-    public void Initialize(TileSettings[,] tileSettingsArray,UnityEngine.Color finishColor, Action<Vector3> onFindFinishPlayerPosition)
+    public void Initialize(TileSettings[,] tileSettingsArray,UnityEngine.Color finishColor, Action<Vector3> onFindFinishPlayerPosition=null)
     {
         _tileSettingsArray = tileSettingsArray;
         FillFinishPositionInArray(finishColor, onFindFinishPlayerPosition);
@@ -51,7 +51,7 @@ public class NextPositionProvider : MonoBehaviour
         return Vector3.zero;
     }
 
-    private void FillFinishPositionInArray(UnityEngine.Color finishColor, Action<Vector3> onFindFinishPlayerPosition)
+    private void FillFinishPositionInArray(UnityEngine.Color finishColor, Action<Vector3> onFindFinishPlayerPosition = null)
     {
         var finishPosition = Vector3.zero;
 

@@ -1,23 +1,25 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class Player : MonoBehaviour
 {
-    [SerializeField]
-     private Animator _animator;
+    public UnityEvent StoppedDance;
+
+    [SerializeField] private Animator _animator;
 
     private static readonly int IsGoing = Animator.StringToHash("IsGoing");
     private static readonly int IsTimeToDance = Animator.StringToHash("IsTimeToDance");
-    
 
-   
 
     public void Walk()
     {
         _animator.SetBool(IsGoing, true);
     }
+
     public void StopWalking()
     {
         _animator.SetBool(IsGoing, false);
@@ -25,13 +27,14 @@ public class Player : MonoBehaviour
 
     public void Dance()
     {
-      _animator.SetBool(IsTimeToDance,true);
-      
+        _animator.SetBool(IsTimeToDance, true);
     }
+
     [UsedImplicitly]
-    public void StopDancing()
+    public async Task StopDancing()
     {
-        _animator.SetBool(IsTimeToDance,false);
-      
+        _animator.SetBool(IsTimeToDance, false);
+        await Task.Delay(9000);
+        StoppedDance?.Invoke();
     }
 }

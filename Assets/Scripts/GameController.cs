@@ -1,19 +1,22 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class GameController : MonoBehaviour
 {
+    [SerializeField] private UnityEvent<int, Player> _playerInitialised;
+
     [SerializeField] private MapBuilder _mapBuilder;
     [SerializeField] private NextPositionProvider _nextPositionProvider;
     [SerializeField] private PositionCalculator _positionCalculator;
     [SerializeField] private PlayerController _playerController;
     [SerializeField] private MousePositionController _mousePositionController;
     [SerializeField] private CameraBehaviour _cameraBehaviour;
+    [SerializeField] private SceneController _sceneController;
 
     [SerializeField] private Color _finishColor;
     [SerializeField] private WinController _winController;
+    [SerializeField] private WinPanelView _winPanelView;
+
     private Color[] _arrayColors;
     private TileSettings[,] _tileSettingsArray;
     private Vector3 _playerPosition;
@@ -21,10 +24,24 @@ public class GameController : MonoBehaviour
     private Vector3 _finishPlayerPosition;
     private Player _player;
     private bool _isPlayerOnFinishPosition;
+    private int _currentLevel = 0;
 
     void Start()
     {
-        _mapBuilder.Initialize(GetTileSettingsArray, GetPlayerPosition);
+      
+      var level = _sceneController.GetSequenceNumberScene();
+      _currentLevel = level+1;
+      StartCurrentLevel();
+        _sceneController.PlayerWin+=_winPanelView.ShowWinPanel;
+        
+    }
+  
+    
+    private void StartCurrentLevel()
+    {
+       
+
+        _mapBuilder.Initialize(_currentLevel, GetTileSettingsArray, GetPlayerPosition);
         _mousePositionController.Initialize(FindDestinationPositionForPlayerMove);
         _nextPositionProvider.Initialize(_tileSettingsArray, _finishColor, FindFinishPlayerPosition);
     }
@@ -51,8 +68,9 @@ public class GameController : MonoBehaviour
 
     private void IsPlayerOnFinish(bool isPlayerOnFinish)
     {
-        if (isPlayerOnFinish) 
+        if (isPlayerOnFinish)
         {
+            _playerController.PlayerIsPosition?.Invoke();
             _winController.CelebrateWin(_player, door: _mapBuilder.GetDoor());
         }
     }
@@ -77,6 +95,16 @@ public class GameController : MonoBehaviour
     private void GetPlayerFromPlayerController()
     {
         _player = _playerController.GetPlayer();
+        _player.StoppedDance.AddListener( _sceneController.LoadNextScene) ;
+
         _cameraBehaviour.Initialise(_player);
+        _playerInitialised?.Invoke(_currentLevel, _player);
+    }
+
+    private void OnDestroy()
+    {
+        _sceneController.PlayerWin -=_winPanelView.ShowWinPanel;
+
+        _player.StoppedDance.RemoveListener( _sceneController.LoadNextScene) ;
     }
 }

@@ -33,11 +33,11 @@ public class MapBuilder : MonoBehaviour
     {
     }
 
-    public void Initialize(Action GetTileSettingsArray, Action GetPlayerPosition)
+    public void Initialize(int currentLevel, Action GetTileSettingsArray = null, Action GetPlayerPosition = null)
     {
         _getPlayerPosition = GetPlayerPosition;
         _getTileSettingsArray = GetTileSettingsArray;
-        _map = _mapTypeProvider.GetTypeOfMap();
+        _map = _mapTypeProvider.GetTypeMap(currentLevel);
         _tileSettingsArray = new TileSettings[_map.GetLength(0), _map.GetLength(1)];
         _playerPosition = new Vector3();
         BuildingMap();
