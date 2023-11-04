@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
+using Settings;
 using Ui;
 using UnityEngine;
 using UnityEngine.Serialization;
