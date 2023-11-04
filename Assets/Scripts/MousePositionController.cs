@@ -25,7 +25,7 @@ public class MousePositionController : MonoBehaviour
     // Start is called before the first frame update
     private void Start()
     {
-        _playerController.PlayerIsPosition += ChangeMouseState;
+        _playerController.PlayerOnPosition += ChangeMouseState;
     }
 
     // Update is called once per frame
@@ -80,6 +80,6 @@ public class MousePositionController : MonoBehaviour
 
     private void OnDestroy()
     {
-        _playerController.PlayerIsPosition -= ChangeMouseState;
+        _playerController.PlayerOnPosition -= ChangeMouseState;
     }
 }

@@ -5,7 +5,8 @@ using UnityEngine.Events;
 
 public class PlayerController : MonoBehaviour
 {
-    public Action PlayerIsPosition;
+    public Action PlayerOnPosition;
+    public Action PlayerMoved;
 
     [SerializeField] private UnityEvent _appearPlayer;
     [SerializeField] private UnityEvent _hidePlayer;
@@ -66,13 +67,14 @@ public class PlayerController : MonoBehaviour
             else
             {
                 sequence.AppendCallback(_player.StopWalking);
-                sequence.AppendCallback(() => PlayerIsPosition?.Invoke());
-                sequence.OnComplete(() => OnPlayerFinished(finishPosition, onPlayerFinishPosition));
+                sequence.AppendCallback(() => PlayerOnPosition?.Invoke());
+                sequence.AppendCallback(() => OnPlayerFinished(finishPosition, onPlayerFinishPosition));
+                sequence.OnComplete(() => PlayerMoved?.Invoke());
             }
         }
         else
         {
-            PlayerIsPosition?.Invoke();
+            PlayerOnPosition?.Invoke();
         }
     }
 
@@ -136,15 +138,16 @@ public class PlayerController : MonoBehaviour
         sequence.Append(_player.transform.DORotate(new Vector3(0, _yPlayerAngle, 0), _rotateDuration));
         sequence.AppendCallback(ShowPlayer);
         sequence.OnComplete(MoveUp);
-       
     }
 
     private void MoveUp()
     {
         var nextUpPosition = _positionCalculator.CalculateNextUpPositionForPlayerMoveUp(_nextDownPosition);
-        _player.transform.DOMove(nextUpPosition, _movingPlayerDownOrUpDuration)
-            .OnComplete(() => PlayerIsPosition.Invoke());
-        _appearPlayer?.Invoke();
+        var sequence = DOTween.Sequence();
+        sequence.Append(_player.transform.DOMove(nextUpPosition, _movingPlayerDownOrUpDuration));
+        sequence.AppendCallback(() => PlayerOnPosition.Invoke());
+        sequence.AppendCallback(() => _appearPlayer?.Invoke());
+        sequence.AppendCallback(() => PlayerMoved?.Invoke());
     }
 
     private void HidePlayer()

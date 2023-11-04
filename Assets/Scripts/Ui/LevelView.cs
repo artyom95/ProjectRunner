@@ -1,14 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
-public class LevelView : MonoBehaviour
+namespace Ui
 {
-   [SerializeField] private TextMeshProUGUI _levelTextMeshProUGUI;
-
-   public void UpdateLevel(int level)
+   public class LevelView : MonoBehaviour
    {
-      _levelTextMeshProUGUI.text = level.ToString();
+      [SerializeField] private TextMeshProUGUI _levelTextMeshProUGUI;
+     
+      public void UpdateLevel(int level)
+      {
+         _levelTextMeshProUGUI.text = level.ToString();
+      }
+   
+    
    }
 }

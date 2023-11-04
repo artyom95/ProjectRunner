@@ -1,3 +1,5 @@
+using System;
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
@@ -5,28 +7,42 @@ using UnityEngine.SceneManagement;
 
 public class SceneController : MonoBehaviour
 {
-   public UnityAction PlayerWin;
-   private int _numberScene;
+    [SerializeField] private AttemptsController _attemptsController;
+    private int _numberScene;
 
-   public void LoadNextScene()
-   {
-      _numberScene = SceneManager.GetActiveScene().buildIndex;
-      var nextScene = _numberScene + 1;
-      if (nextScene < SceneManager.sceneCountInBuildSettings)
-      {
-         
-         SceneManager.LoadSceneAsync(nextScene);
-      }
-      else
-      {
-         PlayerWin?.Invoke();
-      }
-    
-   }
+    private void Start()
+    {
+        _numberScene = SceneManager.GetActiveScene().buildIndex;
+    }
 
-   public int GetSequenceNumberScene()
-   {
-      var numberScene = SceneManager.GetActiveScene().buildIndex;
-      return numberScene;
-   }
+    public void LoadNextScene()
+    {
+        var nextScene = _numberScene + 1;
+
+        SceneManager.LoadSceneAsync(nextScene);
+        
+    }
+
+    public bool AreThereOthersGameScenes()
+    {
+        var nextScene = _numberScene + 1;
+        if (nextScene < SceneManager.sceneCountInBuildSettings)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    public int GetSequenceNumberScene()
+    {
+        var numberScene = SceneManager.GetActiveScene().buildIndex;
+        return numberScene;
+    }
+
+    [UsedImplicitly]
+    public void RestartFirstLevelScene()
+    {
+        SceneManager.LoadSceneAsync("FirstLevel");
+    }
 }

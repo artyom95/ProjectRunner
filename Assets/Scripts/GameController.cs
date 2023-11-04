@@ -1,9 +1,10 @@
+using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class GameController : MonoBehaviour
 {
-    [SerializeField] private UnityEvent<int, Player> _playerInitialised;
+    [SerializeField] private UnityEvent<int, int, Player> _playerInitialised;
 
     [SerializeField] private MapBuilder _mapBuilder;
     [SerializeField] private NextPositionProvider _nextPositionProvider;
@@ -15,35 +16,42 @@ public class GameController : MonoBehaviour
 
     [SerializeField] private Color _finishColor;
     [SerializeField] private WinController _winController;
-    [SerializeField] private WinPanelView _winPanelView;
 
-    private Color[] _arrayColors;
+    [SerializeField] private AttemptsController _attemptsController;
+
+    //[SerializeField] private WinPanelView _winPanelView;
+    [SerializeField] private int _amountAttempts;
+
+    // private Color[] _arrayColors;
     private TileSettings[,] _tileSettingsArray;
     private Vector3 _playerPosition;
     private Vector3 _positionFinishTile;
     private Vector3 _finishPlayerPosition;
     private Player _player;
     private bool _isPlayerOnFinishPosition;
-    private int _currentLevel = 0;
+    private int _currentLevel;
 
-    void Start()
+    [UsedImplicitly]
+    public void QuitGame()
     {
-      
-      var level = _sceneController.GetSequenceNumberScene();
-      _currentLevel = level+1;
-      StartCurrentLevel();
-        _sceneController.PlayerWin+=_winPanelView.ShowWinPanel;
+        UnityEditor.EditorApplication.isPlaying = false;
+    }
+
+    private void Start()
+    {
+        _playerController.PlayerMoved += _attemptsController.DecreaseAmountAttempts;
+        var level = _sceneController.GetSequenceNumberScene();
+        _currentLevel = level + 1;
+        StartCurrentLevel();
         
     }
-  
-    
+
+
     private void StartCurrentLevel()
     {
-        
-
+        _attemptsController.Initialize(_amountAttempts);
         _mapBuilder.Initialize(_currentLevel, GetTileSettingsArray, GetPlayerPosition);
-        
-        _mousePositionController.Initialize( _player, FindDestinationPositionForPlayerMove);
+        _mousePositionController.Initialize(_player, FindDestinationPositionForPlayerMove);
         _nextPositionProvider.Initialize(_tileSettingsArray, _finishColor, FindFinishPlayerPosition);
     }
 
@@ -71,7 +79,7 @@ public class GameController : MonoBehaviour
     {
         if (isPlayerOnFinish)
         {
-            _playerController.PlayerIsPosition?.Invoke();
+            _playerController.PlayerOnPosition?.Invoke();
             _winController.CelebrateWin(_player, door: _mapBuilder.GetDoor());
         }
     }
@@ -96,14 +104,16 @@ public class GameController : MonoBehaviour
     private void GetPlayerFromPlayerController()
     {
         _player = _playerController.GetPlayer();
+        _player.StoppedDance.AddListener(_winController.CheckGameState);
+
         _cameraBehaviour.Initialise(_player);
-        _playerInitialised?.Invoke(_currentLevel, _player);
+        _playerInitialised?.Invoke(_amountAttempts, _currentLevel, _player);
     }
 
     private void OnDestroy()
     {
-        _sceneController.PlayerWin -=_winPanelView.ShowWinPanel;
+        _playerController.PlayerMoved -= _attemptsController.DecreaseAmountAttempts;
 
-        _player.StoppedDance.RemoveListener( _sceneController.LoadNextScene) ;
+        _player.StoppedDance.RemoveListener(_winController.CheckGameState);
     }
 }
