@@ -152,7 +152,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fdcc191b58044fc4abd24bfeeb9b31b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _attemptsController: {fileID: 589103350}
 --- !u!4 &150131840
 Transform:
   m_ObjectHideFlags: 0
@@ -5388,11 +5387,11 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  _attemptsOver:
+  _attemptsOvered:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1862842640}
-        m_TargetAssemblyTypeName: WinController, Assembly-CSharp
+        m_TargetAssemblyTypeName: Controllers.WinController, Assembly-CSharp
         m_MethodName: FinishGame
         m_Mode: 1
         m_Arguments:
@@ -11544,7 +11543,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e55e4c727499298469e0b12145ba4268, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _onCelebrateStart:
+  _startCelebrating:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 838112901}

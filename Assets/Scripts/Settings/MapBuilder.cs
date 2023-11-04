@@ -18,20 +18,16 @@ namespace Settings
 
         private int[,] _map;
         private int _arrayValue;
-    
+
         private TileSettings[,] _tileSettingsArray;
-    
-        private bool _isItEmptyPlace ;
-        private bool _wasTheDoorInstalled ;
-        private bool _isPointForInstanceDoorDetected ;
+
+        private bool _isItEmptyPlace;
+        private bool _wasTheDoorInstalled;
+        private bool _isPointForInstanceDoorDetected;
 
         private Vector3 _playerPosition;
 
         private DoorBehaviour _door;
-        // Start is called before the first frame update
-        private void Start()
-        {
-        }
 
         public void Initialize(int currentLevel, Action GetTileSettingsArray = null, Action GetPlayerPosition = null)
         {
@@ -47,14 +43,26 @@ namespace Settings
         {
             return _door;
         }
+
+        public TileSettings[,] GetArrayTileSettings()
+        {
+            return _tileSettingsArray;
+        }
+
+        public Vector3 GetPlayerPosition()
+        {
+            return _playerPosition;
+        }
+
         private void BuildingMap()
         {
             var locationTileOnHeight = 0;
             for (var row = 0; row < _map.GetLength(0); row++)
-            {//
+            {
+                //
                 if (row % 2 == 0)
                 {
-                    locationTileOnHeight = Random.Range(1, 3); 
+                    locationTileOnHeight = Random.Range(1, 3);
                 }
 
 
@@ -68,7 +76,7 @@ namespace Settings
                         tile.transform.position =
                             _positionCalculator.ConvertToWorldPosition(row, locationTileOnHeight, column);
                         _playerPosition = _positionCalculator.CalculatePlayerPositionForInstance(tile);
-                   
+
                         if (_isPointForInstanceDoorDetected && !_wasTheDoorInstalled)
                         {
                             InstanceDoor(tile);
@@ -88,6 +96,7 @@ namespace Settings
                     _isItEmptyPlace = false;
                 }
             }
+
             _getPlayerPosition.Invoke();
             _getTileSettingsArray.Invoke();
         }
@@ -99,6 +108,7 @@ namespace Settings
             _wasTheDoorInstalled = true;
             _door.transform.Rotate(0, -90, 0);
         }
+
         private TileSettings FindTypeObject(int row, int column)
         {
             TileSettings gameObjectForInstantiate = default;
@@ -119,27 +129,5 @@ namespace Settings
 
             return gameObjectForInstantiate;
         }
-
-        public TileSettings[,] GetArrayTileSettings()
-        {
-            return _tileSettingsArray;
-        }
-
-        public Vector3 GetPlayerPosition()
-        {
-            return _playerPosition;
-        }
-
-/*
-    public bool IsItFinishColor(Color color, Vector2Int position)
-    {
-        if (_tileSettingsArray[position.x,position.y] != null && _tileSettingsArray[position.x,position.y].Color == color )
-        {
-            return true;
-        }
-
-        return false;
-    }
-*/
     }
 }

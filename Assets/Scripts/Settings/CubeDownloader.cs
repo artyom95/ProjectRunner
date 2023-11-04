@@ -4,7 +4,6 @@ namespace Settings
 {
     public class CubeDownloader : MonoBehaviour
     {
-
         [SerializeField] private GameObject _cube;
         [SerializeField] private Grid _grid;
 
@@ -27,9 +26,8 @@ namespace Settings
                 var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
                 if (Physics.Raycast(ray, out var hitInfo))
                 {
-                    Debug.Log(_grid.WorldToLocal( hitInfo.transform.position));
+                    Debug.Log(_grid.WorldToLocal(hitInfo.transform.position));
                 }
-          
             }
         }
     }

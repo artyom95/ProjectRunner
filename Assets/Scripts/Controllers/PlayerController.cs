@@ -55,9 +55,6 @@ namespace Controllers
 
             if (AreThePositionsNearest(destinationPosition))
             {
-                Debug.Log("Destination point");
-                Debug.Log(destinationPoint);
-
                 _player.transform.LookAt(destinationPoint);
                 _player.Walk();
                 sequence.Append(_player.transform.DOMove(destinationPoint, _movingPlayerDuration));

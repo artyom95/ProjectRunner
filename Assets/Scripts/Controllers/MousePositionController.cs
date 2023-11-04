@@ -16,6 +16,16 @@ namespace Controllers
         private bool _isMouseLocked;
 
 
+        private void Start()
+        {
+            _playerController.PlayerOnPosition += ChangeMouseState;
+        }
+
+        public Vector3 GetTheDestinationPositionForPlayerMove()
+        {
+            return _positionForPlayerMove;
+        }
+
         public void Initialize(Player player, Action getTheDestinationPositionForPlayerMove = null)
         {
             _player = player;
@@ -23,14 +33,7 @@ namespace Controllers
             _getTheDestinationPositionForPlayerMove = getTheDestinationPositionForPlayerMove;
         }
 
-        // Start is called before the first frame update
-        private void Start()
-        {
-            _playerController.PlayerOnPosition += ChangeMouseState;
-        }
-
-        // Update is called once per frame
-        void Update()
+        private void Update()
         {
             if (Input.GetMouseButtonUp(0) && !_isMouseLocked)
             {
@@ -67,11 +70,6 @@ namespace Controllers
             }
 
             return default;
-        }
-
-        public Vector3 GetTheDestinationPositionForPlayerMove()
-        {
-            return _positionForPlayerMove;
         }
 
         private void ChangeMouseState()

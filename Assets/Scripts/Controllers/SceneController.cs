@@ -6,7 +6,7 @@ namespace Controllers
 {
     public class SceneController : MonoBehaviour
     {
-        [SerializeField] private AttemptsController _attemptsController;
+     //   [SerializeField] private AttemptsController _attemptsController;
         private int _numberScene;
 
         private void Start()
@@ -19,7 +19,6 @@ namespace Controllers
             var nextScene = _numberScene + 1;
 
             SceneManager.LoadSceneAsync(nextScene);
-        
         }
 
         public bool AreThereOthersGameScenes()

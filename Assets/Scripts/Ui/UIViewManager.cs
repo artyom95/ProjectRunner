@@ -1,18 +1,12 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using JetBrains.Annotations;
 using Settings;
 using Ui;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class UIViewManager : MonoBehaviour
 {
     [SerializeField] private UIViewPosioner _uIViewPositioner;
-
     [SerializeField] private LevelView _levelViewPrefab;
-
     [SerializeField] private AttemptsView _attemptsViewPrefab;
 
     private Player _player;
@@ -34,7 +28,7 @@ public class UIViewManager : MonoBehaviour
     public void ShowUIFrames()
     {
         _levelView.gameObject.SetActive(true);
-       // _attemptsVew.gameObject.SetActive(true);
+        // _attemptsVew.gameObject.SetActive(true);
     }
 
     /// <summary>
@@ -44,17 +38,18 @@ public class UIViewManager : MonoBehaviour
     public void HideUIFrames()
     {
         _levelView.gameObject.SetActive(false);
-       // _attemptsVew.gameObject.SetActive(false);
+        // _attemptsVew.gameObject.SetActive(false);
     }
 
-   [UsedImplicitly]
+    [UsedImplicitly]
     public void UpdateAttempts(int amountAttempts)
     {
         _attemptsVew.UpdateAttempts(amountAttempts);
     }
+
     private void Update()
     {
-        _uIViewPositioner.UpdatePosition(_player.transform, _levelView.transform as RectTransform,"LevelView");
+        _uIViewPositioner.UpdatePosition(_player.transform, _levelView.transform as RectTransform, "LevelView");
         _uIViewPositioner.UpdatePosition(_player.transform, _attemptsVew.transform as RectTransform, "AttemptsView");
     }
 
@@ -63,7 +58,7 @@ public class UIViewManager : MonoBehaviour
         _levelView = Instantiate(_levelViewPrefab, transform);
         _levelView.UpdateLevel(levelValue);
 
-        
+
         _attemptsVew = Instantiate(_attemptsViewPrefab, transform);
         _attemptsVew.UpdateAttempts(amountAttempts);
     }

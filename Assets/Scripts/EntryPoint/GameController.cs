@@ -24,10 +24,8 @@ namespace EntryPoint
 
         [SerializeField] private AttemptsController _attemptsController;
 
-        //[SerializeField] private WinPanelView _winPanelView;
         [SerializeField] private int _amountAttempts;
 
-        // private Color[] _arrayColors;
         private TileSettings[,] _tileSettingsArray;
         private Vector3 _playerPosition;
         private Vector3 _positionFinishTile;
@@ -36,11 +34,6 @@ namespace EntryPoint
         private bool _isPlayerOnFinishPosition;
         private int _currentLevel;
 
-        [UsedImplicitly]
-        public void QuitGame()
-        {
-            UnityEditor.EditorApplication.isPlaying = false;
-        }
 
         private void Start()
         {
@@ -48,14 +41,18 @@ namespace EntryPoint
             var level = _sceneController.GetSequenceNumberScene();
             _currentLevel = level + 1;
             StartCurrentLevel();
-        
         }
 
+        [UsedImplicitly]
+        public void QuitGame()
+        {
+            UnityEditor.EditorApplication.isPlaying = false;
+        }
 
         private void StartCurrentLevel()
         {
             _attemptsController.Initialize(_amountAttempts);
-            _mapBuilder.Initialize(_currentLevel, GetTileSettingsArray, GetPlayerPosition);
+            _mapBuilder.Initialize(_currentLevel, ReceiveTileSettingsArray, FillPlayerPosition);
             _mousePositionController.Initialize(_player, FindDestinationPositionForPlayerMove);
             _nextPositionProvider.Initialize(_tileSettingsArray, _finishColor, FindFinishPlayerPosition);
         }
@@ -89,12 +86,12 @@ namespace EntryPoint
             }
         }
 
-        private void GetTileSettingsArray()
+        private void ReceiveTileSettingsArray()
         {
             _tileSettingsArray = _mapBuilder.GetArrayTileSettings();
         }
 
-        private void GetPlayerPosition()
+        private void FillPlayerPosition()
         {
             _playerPosition = _mapBuilder.GetPlayerPosition();
             PlacePlayer();
@@ -103,10 +100,10 @@ namespace EntryPoint
         private void PlacePlayer()
         {
             _playerController.PlacePlayerOnScene(_playerPosition);
-            GetPlayerFromPlayerController();
+            ReceivePlayer();
         }
 
-        private void GetPlayerFromPlayerController()
+        private void ReceivePlayer()
         {
             _player = _playerController.GetPlayer();
             _player.StoppedDance.AddListener(_winController.CheckGameState);

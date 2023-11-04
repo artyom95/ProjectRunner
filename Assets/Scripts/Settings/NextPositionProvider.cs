@@ -6,11 +6,12 @@ namespace Settings
     public class NextPositionProvider : MonoBehaviour
     {
         private TileSettings[,] _tileSettingsArray;
-        private UnityEngine.Color _color;
+        private Color _color;
         private Vector2Int _currentPosition;
-   
 
-        public void Initialize(TileSettings[,] tileSettingsArray,UnityEngine.Color finishColor, Action<Vector3> onFindFinishPlayerPosition=null)
+
+        public void Initialize(TileSettings[,] tileSettingsArray, Color finishColor,
+            Action<Vector3> onFindFinishPlayerPosition = null)
         {
             _tileSettingsArray = tileSettingsArray;
             FillFinishPositionInArray(finishColor, onFindFinishPlayerPosition);
@@ -49,7 +50,7 @@ namespace Settings
             return Vector3.zero;
         }
 
-        private void FillFinishPositionInArray(UnityEngine.Color finishColor, Action<Vector3> onFindFinishPlayerPosition = null)
+        private void FillFinishPositionInArray(Color finishColor, Action<Vector3> onFindFinishPlayerPosition = null)
         {
             var finishPosition = Vector3.zero;
 
@@ -57,12 +58,11 @@ namespace Settings
             {
                 for (var i1 = 0; i1 < _tileSettingsArray.GetLength(1); i1++)
                 {
-                    if ( _tileSettingsArray[i, i1] != null && _tileSettingsArray[i, i1].Color == finishColor )
+                    if (_tileSettingsArray[i, i1] != null && _tileSettingsArray[i, i1].Color == finishColor)
                     {
                         finishPosition = _tileSettingsArray[i, i1].transform.position;
                         onFindFinishPlayerPosition?.Invoke(finishPosition);
                         return;
-                    
                     }
                 }
             }

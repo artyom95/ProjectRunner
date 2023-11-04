@@ -1,13 +1,13 @@
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 
 namespace Controllers
 {
     public class AttemptsController : MonoBehaviour
     {
         [SerializeField] private UnityEvent<int> _attemptsChanged;
-
-        [SerializeField] private UnityEvent _attemptsOver;
+        [SerializeField] private UnityEvent _attemptsOvered;
 
         private int _amountAttempts;
 
@@ -22,7 +22,7 @@ namespace Controllers
             _amountAttempts--;
             if (AreAttemptsOver())
             {
-                _attemptsOver?.Invoke();
+                _attemptsOvered?.Invoke();
             }
 
             _attemptsChanged?.Invoke(_amountAttempts);

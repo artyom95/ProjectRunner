@@ -4,15 +4,14 @@ using JetBrains.Annotations;
 using Settings;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 
 namespace Controllers
 {
     public class WinController : MonoBehaviour
-    {
-        [SerializeField] private UnityEvent _onCelebrateStart;
-
+    { 
+        [SerializeField] private UnityEvent _startCelebrating;
         [SerializeField] private UnityEvent _gameWin;
-
         [SerializeField] private UnityEvent _gameLose;
 
         [SerializeField] private SceneController _sceneController;
@@ -22,7 +21,7 @@ namespace Controllers
         {
             door.RotateDoor();
             player.Dance();
-            _onCelebrateStart?.Invoke();
+            _startCelebrating?.Invoke();
         }
 
         public void CheckGameState()
@@ -39,7 +38,7 @@ namespace Controllers
         }
 
         [UsedImplicitly]
-        public async void  FinishGame()
+        public async void FinishGame()
         {
             await Task.Delay(1000);
             _gameLose.Invoke();

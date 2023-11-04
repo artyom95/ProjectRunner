@@ -11,10 +11,11 @@ namespace Settings
         private const float _playerMoveUpOffset = 1.15f;
         private const float _playerMoveDownOffset = 1.0f;
         private const float _offsetNextDownPositionY = 0.7f;
+
         public Vector3 ConvertToWorldPosition(int x, int y, int z)
         {
             var position = _grid.CellToWorld(new Vector3Int(x, y, z));
-       
+
             return position;
         }
 
@@ -42,9 +43,9 @@ namespace Settings
 
         public Vector3 CalculateNextUpPositionForPlayerMoveUp(Vector3 nextDownPosition)
         {
-            var nextUpPosition = new Vector3(nextDownPosition.x, nextDownPosition.y + _playerMoveUpOffset, nextDownPosition.z);
+            var nextUpPosition = new Vector3(nextDownPosition.x, nextDownPosition.y + _playerMoveUpOffset,
+                nextDownPosition.z);
             return nextUpPosition;
-
         }
 
         public Vector3 CalculateLowerPositionForPlayerMoveDown(Vector3 playerPosition)
@@ -54,7 +55,7 @@ namespace Settings
             return lowerPosition;
         }
 
-        public Vector3 CalculateDestinationPositionForPlayerMove(Vector3 destinationPosition,Vector3 playerPosition)
+        public Vector3 CalculateDestinationPositionForPlayerMove(Vector3 destinationPosition, Vector3 playerPosition)
         {
             var newDestinationPoint = new Vector3(destinationPosition.x, playerPosition.y, destinationPosition.z);
 
@@ -63,7 +64,8 @@ namespace Settings
 
         public Vector3 CalculateNextDownPosition(Vector3 nextPosition)
         {
-            var nextDownPosition = new Vector3(nextPosition.x, nextPosition.y - _offsetNextDownPositionY, nextPosition.z);
+            var nextDownPosition =
+                new Vector3(nextPosition.x, nextPosition.y - _offsetNextDownPositionY, nextPosition.z);
             return nextDownPosition;
         }
 
