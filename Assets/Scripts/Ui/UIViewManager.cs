@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class UIViewManager : MonoBehaviour
 {
-    [SerializeField] private UIViewPosioner _uIViewPositioner;
+    [SerializeField] private UIViewPositioner _uIViewPositioner;
     [SerializeField] private LevelView _levelViewPrefab;
     [SerializeField] private AttemptsView _attemptsViewPrefab;
 
@@ -28,7 +28,7 @@ public class UIViewManager : MonoBehaviour
     public void ShowUIFrames()
     {
         _levelView.gameObject.SetActive(true);
-        // _attemptsVew.gameObject.SetActive(true);
+        _attemptsVew.gameObject.SetActive(true);
     }
 
     /// <summary>
@@ -38,7 +38,7 @@ public class UIViewManager : MonoBehaviour
     public void HideUIFrames()
     {
         _levelView.gameObject.SetActive(false);
-        // _attemptsVew.gameObject.SetActive(false);
+        _attemptsVew.gameObject.SetActive(false);
     }
 
     [UsedImplicitly]

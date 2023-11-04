@@ -75,7 +75,7 @@
      <Compile Include="Assets\Scripts\Ui\LevelView.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark02.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\TextMeshSpawner.cs" />
-     <Compile Include="Assets\Scripts\Ui\UIViewPosioner.cs" />
+     <Compile Include="Assets\Scripts\Ui\UIViewPositioner.cs" />
      <Compile Include="Assets\Scripts\Controllers\MousePositionController.cs" />
      <Compile Include="Assets\TextMesh Pro\Examples &amp; Extras\Scripts\Benchmark03.cs" />
      <Compile Include="Assets\Scripts\Behaviours\DoorBehaviour.cs" />
